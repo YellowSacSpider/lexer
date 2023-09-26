@@ -1,24 +1,28 @@
 #pragma once
-#include <iostream>
-#include <vector>
+
 #include <string>
+#include <vector>
 
-class Lexer final {
-private:
-	std::string token;
-	std::vector<std::string> tokens{};
-	std::string code;
-	char* textptr = nullptr;
-public:
-	void Advance();
-	void Check();
+// ReSharper disable once CppInconsistentNaming
+struct Lexer
+{
+	explicit Lexer(std::string f_code);
+
+	// ReSharper disable once CppInconsistentNaming
 	void Tokenize();
-	void Display();
-	void setCode(std::string m_code);
-	Lexer(std::string f_code) : code(f_code)
-	{
-		textptr = &code[0];
-	}
 
+	// ReSharper disable once CppInconsistentNaming
+	std::vector<std::string> GetTokens();
 
+private:
+	std::string code_;
+	std::string token_;
+	const char* textptr_ = nullptr;
+	std::vector<std::string> tokens_ = {};
+
+	// ReSharper disable once CppInconsistentNaming
+	void Check();
+
+	// ReSharper disable once CppInconsistentNaming
+	void Advance();
 };

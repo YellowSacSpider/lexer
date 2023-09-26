@@ -1,132 +1,60 @@
 #include "lexer.h"
 
-
-void Lexer::Advance() {
-	if (*textptr != '\0' || *textptr == ' ' || *textptr == '\t') // increment pointer until pass a null or increment pointer if pass a space.
-		textptr++;
-}
-void Lexer::Check() {
-	if (*textptr == '\0')
-	{
-		tokens.emplace_back(token);
-	}
-	switch (*textptr)
-	{
-	case '+':
-	case '-':
-	case '*':
-	case '/':
-	case '%':
-	case '(':
-	case ')':
-	case '[':
-	case ']':
-		token = *textptr;
-		tokens.emplace_back(token);
-		token.clear();
-		break;
-	case '0':
-	case '1':
-	case '2':
-	case '3':
-	case '4':
-	case '5':
-	case '6':
-	case '7':
-	case '8':
-	case '9':
-	case 'a':
-	case 'b':
-	case 'c':
-	case 'd':
-	case 'e':
-	case 'f':
-	case 'g':
-	case 'h':
-	case 'i':
-	case 'j':
-	case 'k':
-	case 'l':
-	case 'm':
-	case 'n':
-	case 'o':
-	case 'p':
-	case 'q':
-	case 'r':
-	case 's':
-	case 't':
-	case 'u':
-	case 'v':
-	case 'w':
-	case 'x':
-	case 'y':
-	case 'z':
-	case 'A':
-	case 'B':
-	case 'C':
-	case 'D':
-	case 'E':
-	case 'F':
-	case 'G':
-	case 'H':
-	case 'I':
-	case 'J':
-	case 'K':
-	case 'L':
-	case 'M':
-	case 'N':
-	case 'O':
-	case 'P':
-	case 'Q':
-	case 'R':
-	case 'S':
-	case 'T':
-	case 'U':
-	case 'V':
-	case 'W':
-	case 'X':
-	case 'Y':
-	case 'Z':
-		token += *textptr;
-		if (*(textptr + 1) == '+' || *(textptr + 1) == '-' || *(textptr + 1) == '*' || *(textptr + 1) == '/' || *(textptr + 1) == ' ' || *(textptr + 1) == '\t')
-		{
-			tokens.emplace_back(token);
-			token.clear();
-		}
-		break;
-
-
-	}
-}
-void Lexer::setCode(std::string m_code)
+Lexer::Lexer(std::string f_code) : code_(std::move(f_code))
 {
-	code = m_code;
-	textptr = &code[0];
+	textptr_ = code_.data();
 }
 
-void Lexer::Tokenize() {
-	if (code.empty()) {
-		std::cout << "CANNOT TOKENIZE EMPTY STRING!" << '\n';
+// ReSharper disable once CppInconsistentNaming
+void Lexer::Tokenize()
+{
+	if (code_.empty())
 		return;
-	}
 
-	tokens.clear();
-	token.clear();
-	while (true) {
-		if (*textptr == '\0') //check dupy
-		{
-			Check();
+	token_.clear();
+	tokens_.clear();
+
+	while (true)
+	{
+		if (*textptr_ == '\0')
 			break;
-		}
+
 		Check();
-		Advance();
 	}
 }
 
-void Lexer::Display() {
-	for (const auto& val : tokens) {
-		std::cout << val;
-		std::cout << '\n';
+// ReSharper disable once CppInconsistentNaming
+std::vector<std::string> Lexer::GetTokens()
+{
+	return tokens_;
+}
+
+// ReSharper disable once CppInconsistentNaming
+void Lexer::Check()
+{
+	if (*textptr_ == ' ' || *textptr_ == '\t')
+	{
+		tokens_.emplace_back(token_);
+		token_.clear();
+		textptr_++;
 	}
-	std::cout << '\n';
+
+	if (std::isalnum(*textptr_))
+		token_ += *textptr_;
+	else
+	{
+		tokens_.emplace_back(token_);
+		token_.clear();
+		token_ = *textptr_;
+		tokens_.emplace_back(token_);
+		token_.clear();
+	}
+	Advance();
+}
+
+// ReSharper disable once CppInconsistentNaming
+void Lexer::Advance()
+{
+	if (*textptr_ != '\0')
+		textptr_++;
 }
